@@ -118,10 +118,11 @@ void EpollEngine::run()
 
 	for (i = 0; i < n; ++i) {
 		void *p = events[i].data.ptr;
-		((EventHandler*)p)->handleEvent();	// ??? !!!
+		((EventHandler*)p)->handle();	// ??? !!!
 	}
 }
 
+#if 0
 //the singleton instance
 EpollEngine* EpollEngine::instance_ = NULL;
 
@@ -131,3 +132,4 @@ EpollEngine* EpollEngine::getInstance()
 		instance_ = new EpollEngine();
 	return instance_;
 }
+#endif

@@ -20,6 +20,7 @@
 #include "handler.h"
 #include "acceptorhandler.h"
 #include "businesshandler.h"
+#include "factory.h"
 
 AcceptorHandler::AcceptorHandler()
 {
@@ -58,7 +59,11 @@ bool AcceptorHandler::getSeverReady()
 	acceptor_.myfd = sfd;
 	modifyFd(acceptor_.myfd);
 	acceptor_.myevent = READ_EVENT;
-	EpollEngine::getInstance()->addEvent(this);
+	
+	//get the factory instance
+	Factory* pFactory = Factory::getInstance();
+	//register to the engine
+	(pFactory->getTheEngine())->addEvent(this);
 	
 	int s = listen(sfd, 20);
 	if(-1 == s){
@@ -71,7 +76,7 @@ bool AcceptorHandler::getSeverReady()
 
 
 
-bool AcceptorHandler::handleEvent()
+bool AcceptorHandler::handle()
 {
 	while(1)
 	{

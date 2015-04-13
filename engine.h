@@ -17,20 +17,15 @@ class EpollEngine
   private:
     //the epoll fd
 	int epollfd_;
-	//the one and the only
-	static EpollEngine *instance_;
 	
-	EpollEngine();
 	//init the epollfd_, epoll_createl is here
 	bool initialize();
 	//analysis the event
 	unsigned int getEvent(int eventype);
 	
   public:
+	EpollEngine();
 	~EpollEngine();
-	
-	//get the object addr
-	static EpollEngine* getInstance();
 	
 	//the epoll_wait is here
 	void run();

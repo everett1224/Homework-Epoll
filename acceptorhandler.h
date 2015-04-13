@@ -19,7 +19,7 @@ class AcceptorHandler : public EventHandler
 	AcceptorHandler();
 	~AcceptorHandler();
 	  
-	virtual bool handleEvent();  
+	virtual bool handle();  
 	virtual Handler getHandler();
 	  
 	bool getSeverReady();

@@ -16,14 +16,17 @@
 #include "businesshandler.h"
 #include "handler.h"
 #include "engine.h"
+#include "factory.h"
 
 BusinessHandler::BusinessHandler(Handler& handler)
 {
 	streamer_ = handler;
 	
 	modifyFd(streamer_.myfd);
+	//get the factory instance
+	Factory* pFactory = Factory::getInstance();
 	//register to the engine
-	EpollEngine::getInstance()->addEvent(this);
+	(pFactory->getTheEngine())->addEvent(this);
 	//init the done_ as false ,this is important!!!
 	done_ = false;
 }
@@ -33,7 +36,7 @@ Handler BusinessHandler::getHandler()
 	return streamer_;
 }
 
-bool BusinessHandler::handleEvent()
+bool BusinessHandler::handle()
 {
 	printf("OK got a connetion @ fd %d\n", streamer_.myfd);
 	char buf[512];

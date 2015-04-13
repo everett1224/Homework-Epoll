@@ -20,7 +20,7 @@ class BusinessHandler : public EventHandler
 	BusinessHandler(Handler& handler);
 	~BusinessHandler();
 
-	virtual bool handleEvent(); 
+	virtual bool handle(); 
 	virtual Handler getHandler();
 	
   private:

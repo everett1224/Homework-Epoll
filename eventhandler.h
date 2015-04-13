@@ -15,11 +15,8 @@
 class EventHandler
 {
   public:
-//	//the handler of the event
-//	Handler myhandler;
-	
 	//handle the event called by the engine
-	virtual bool handleEvent() = 0;
+	virtual bool handle() = 0;
 	
 	//get the handler
 	virtual Handler getHandler() = 0;
