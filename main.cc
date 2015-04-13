@@ -1,7 +1,11 @@
-#include"server.h"
+#include "acceptorhandler.h"
+#include "engine.h"
 
 int main()
 {
-	Server myserver;
-	myserver.run();
+	AcceptorHandler server;
+	
+	while(1){
+		EpollEngine::getInstance()->run();
+	}
 }

@@ -4,7 +4,7 @@
 // the epoll engine class 
 //
 // @author wangbb
-// @email 598428034@qq.com
+// @email edelweiss1224@gmail.com
 //
 
 #include <sys/epoll.h>
@@ -13,40 +13,96 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "engine.h"
+#include "eventhandler.h"
+#include "handler.h"
 
 EpollEngine::EpollEngine()
 {
-	epollfd_ = epoll_create1(0);
-	if (epollfd_ == -1)
-		perror("epoll_create1");
-//	events = (struct epoll_event*)calloc(64 , sizeof(struct epoll_event));
+	if (false == initialize())
+		perror("Epollfd false");
 }
 
 EpollEngine::~EpollEngine()
 {
 	close(epollfd_);
-//	free(events);
 }
 
 
-bool EpollEngine::addToTheEngine(Business* item, int action)
+bool EpollEngine::addEvent(EventHandler* myitem)
 {
+	Handler item = myitem->getHandler();
 	struct epoll_event event;
-	event.data.ptr = item;
-	event.events = item->myevent;
-	int s;
-	
-	if (action == 0)
-		s = epoll_ctl(epollfd_, EPOLL_CTL_ADD, item->fd, &event);
-	else
-		s = epoll_ctl(epollfd_, EPOLL_CTL_MOD, item->fd, &event);
+	event.data.ptr = myitem;
+	event.events = getEvent(item.myevent);
 
+	int s;
+	s = epoll_ctl(epollfd_, EPOLL_CTL_ADD, item.myfd, &event);
 	if (s == -1) {
 		perror("epoll_ctl error");
 		return false;
 	}
 
 	return true;
+}
+
+bool EpollEngine::delEvent(EventHandler* myitem)
+{
+	Handler item = myitem->getHandler();
+	struct epoll_event event;
+	event.data.ptr = myitem;
+	event.events = getEvent(item.myevent);
+
+	int s;
+	s = epoll_ctl(epollfd_, EPOLL_CTL_DEL, item.myfd, &event);
+	if (s == -1) {
+		perror("epoll_ctl error");
+		return false;
+	}
+
+	return true;
+}
+
+bool EpollEngine::modifyEvent(EventHandler* myitem)
+{
+	Handler item = myitem->getHandler();
+	struct epoll_event event;
+	event.data.ptr = myitem;
+	event.events = getEvent(item.myevent);
+
+	int s;
+	s = epoll_ctl(epollfd_, EPOLL_CTL_MOD, item.myfd, &event);
+	if (s == -1) {
+		perror("epoll_ctl error");
+		return false;
+	}
+
+	return true;
+}
+
+bool EpollEngine::initialize()
+{
+	epollfd_ = epoll_create1(0);
+	if (epollfd_ == -1){
+		perror("epoll_create1");
+		return false;
+	}
+	return true;
+}
+
+unsigned int EpollEngine::getEvent(int eventype)
+{
+	if (eventype < 0){
+		printf("event error");
+		exit(0);
+	}
+	switch(eventype)
+	{
+		case 0x01:
+			return EPOLLIN | EPOLLET;
+		case 0x02:
+			return EPOLLOUT | EPOLLET;
+		//	default
+	}
 }
 
 void EpollEngine::run()
@@ -62,6 +118,16 @@ void EpollEngine::run()
 
 	for (i = 0; i < n; ++i) {
 		void *p = events[i].data.ptr;
-		((Business*)p)->run();	// ???
+		((EventHandler*)p)->handleEvent();	// ??? !!!
 	}
+}
+
+//the singleton instance
+EpollEngine* EpollEngine::instance_ = NULL;
+
+EpollEngine* EpollEngine::getInstance()
+{
+	if(instance_ == NULL)
+		instance_ = new EpollEngine();
+	return instance_;
 }
