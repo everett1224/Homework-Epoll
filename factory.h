@@ -25,7 +25,8 @@ class Factory
 
   public:
 	~Factory();
-
+	
+	void deleteEngine();
 	// get the object of the Factory
 	static Factory* getInstance();
 	// create the new engine

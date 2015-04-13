@@ -33,3 +33,9 @@ Factory* Factory::getInstance()
 		instance_ = new Factory();
 	return instance_;
 }
+
+
+void Factory::deleteEngine()
+{
+	delete pEngine_;
+}
