@@ -12,11 +12,12 @@
 
 #include "eventhandler.h"
 #include "handler.h"
+#include "engine.h"
 
 class AcceptorHandler : public EventHandler
 {
   public:
-	AcceptorHandler();
+	AcceptorHandler(EpollEngine* engine);
 	~AcceptorHandler();
 	  
 	virtual bool handle();  
@@ -27,6 +28,7 @@ class AcceptorHandler : public EventHandler
   private:  
 	//the handler contains the listen fd and the fd event
 	Handler acceptor_;
+	EpollEngine* engine_;
 };
 
 #endif //_ACCEPTORHANDLER_H_

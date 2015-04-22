@@ -16,17 +16,14 @@
 #include "businesshandler.h"
 #include "handler.h"
 #include "engine.h"
-#include "factory.h"
 
-BusinessHandler::BusinessHandler(Handler& handler)
+BusinessHandler::BusinessHandler(EpollEngine* engine, Handler& handler):engine_(engine)
 {
 	streamer_ = handler;
 	
 	modifyFd(streamer_.myfd);
-	//get the factory instance
-	Factory* pFactory = Factory::getInstance();
 	//register to the engine
-	(pFactory->getTheEngine())->addEvent(this);
+	engine_->addEvent(this);
 	//init the done_ as false ,this is important!!!
 	done_ = false;
 }

@@ -1,20 +1,15 @@
+#include "DI/CppInject.h"
 #include "acceptorhandler.h"
 #include "engine.h"
-#include "factory.h"
 
 int main()
 {
-	//get the factory 
-	Factory* pFactory = Factory::getInstance();
-	pFactory->createEngine();
+//	CppInject::supply<AcceptorHandler>::fetch();
+	EpollEngine* engine = CppInject::supply<EpollEngine>::fetch();
 	
-	//the server is here
-	AcceptorHandler server;
+	AcceptorHandler sever(engine);
 	
 	while(1){
-		(pFactory->getTheEngine())->run();
+		engine->run();
 	}
-	
-	pFactory->deleteEngine();
-	delete pFactory;
 }

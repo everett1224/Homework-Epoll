@@ -103,6 +103,7 @@ unsigned int EpollEngine::getEvent(int eventype)
 			return EPOLLOUT | EPOLLET;
 		//	default
 	}
+	return 0x00000000;
 }
 
 void EpollEngine::run()

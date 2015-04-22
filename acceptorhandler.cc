@@ -20,9 +20,10 @@
 #include "handler.h"
 #include "acceptorhandler.h"
 #include "businesshandler.h"
-#include "factory.h"
+#include "DI/CppInject.h"
+#include "DI/GlobalObject.h"
 
-AcceptorHandler::AcceptorHandler()
+AcceptorHandler::AcceptorHandler(EpollEngine* engine):engine_(engine)
 {
 	getSeverReady();
 }
@@ -59,11 +60,10 @@ bool AcceptorHandler::getSeverReady()
 	acceptor_.myfd = sfd;
 	modifyFd(acceptor_.myfd);
 	acceptor_.myevent = READ_EVENT;
+
+//	EpollEngine::getInstance()->addEvent(this);
 	
-	//get the factory instance
-	Factory* pFactory = Factory::getInstance();
-	//register to the engine
-	(pFactory->getTheEngine())->addEvent(this);
+	engine_->addEvent(this);
 	
 	int s = listen(sfd, 20);
 	if(-1 == s){
@@ -99,7 +99,9 @@ bool AcceptorHandler::handle()
 		Handler streamer_;
 		streamer_.myfd = confd;
 		streamer_.myevent = READ_EVENT;
-		new BusinessHandler(streamer_);
+		
+		EpollEngine* engine = CppInject::supply<EpollEngine>::fetch(globalZone);
+		new BusinessHandler(engine, streamer_);
 		
 //		pmasterEngine->addToTheEngine(pconReadBusiness, 0);
 	}

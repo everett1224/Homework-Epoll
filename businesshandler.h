@@ -13,11 +13,12 @@
 
 #include "handler.h"
 #include "eventhandler.h"
+#include "engine.h"
 
 class BusinessHandler : public EventHandler
 {
   public:
-	BusinessHandler(Handler& handler);
+	BusinessHandler(EpollEngine* engine, Handler& handler);
 	~BusinessHandler();
 
 	virtual bool handle(); 
@@ -31,6 +32,7 @@ class BusinessHandler : public EventHandler
     bool done_;
 	//the handler contains the accepted fd and the fd event
 	Handler streamer_;
+	EpollEngine* engine_;
 };
 
 #endif //_BUSINESSHANDLER_H_
