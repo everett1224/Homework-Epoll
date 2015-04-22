@@ -4,13 +4,14 @@
 #include "engine.h"
 #include "acceptorhandler.h"
 //#include "businesshandler.h"
-/*
-AcceptorHandler* createAcceptorHandler(CppInject::Zone& zone)
-{
-	return new AcceptorHandler(CppInject::supply<EpollEngine>::fetch(zone));
-}
-*/
 using namespace CppInject;
+
+AcceptorHandler* createAcceptorHandler(Zone& zone)
+{
+	return new AcceptorHandler(supply<EpollEngine>::fetch(zone));
+}
+
+
 extern "C"
 {
 	void __attribute__ ((constructor)) register_all_bindings()
@@ -21,7 +22,7 @@ extern "C"
 		if (not_yet_run){
 	//		std::cout << ":Registering";
 			supply<EpollEngine>::configure();
-//			CppInject::supply<AcceptorHandler>::configure(createAcceptorHandler);
+			supply<AcceptorHandler>::configure(createAcceptorHandler);
 
 			not_yet_run = false;
 		}
