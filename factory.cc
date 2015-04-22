@@ -39,3 +39,9 @@ void Factory::deleteEngine()
 {
 	delete pEngine_;
 }
+
+BusinessHandler* Factory::createBusinessHandler(Handler& handler)
+{
+	BusinessHandler* pBusHandler =  new BusinessHandler(handler);
+	return pBusHandler;
+}

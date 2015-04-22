@@ -1,8 +1,8 @@
 ////
 // @file factory.h
 // @brief 
-// the factory of the engine, the factory is singleton.
-// (Dependency Injection better?)
+// the factory of the engine, the factory is singleton with Iversion of Control;
+// (Dependency Injection | Service Locator better?)
 //
 // @auther wangbb
 // @email edelweiss1224@gmail.com
@@ -12,6 +12,8 @@
 #define _FACTORY_H_
 
 #include "engine.h"
+#include "businesshandler.h"
+#include "handler.h"
 
 class Factory
 {
@@ -29,10 +31,12 @@ class Factory
 	void deleteEngine();
 	// get the object of the Factory
 	static Factory* getInstance();
-	// create the new engine
+	// create a new engine
 	EpollEngine* createEngine();
 	// get the engine
 	EpollEngine* getTheEngine();
+	// create a new businesshandler
+	BusinessHandler* createBusinessHandler(Handler& handler);
 };
 
 #endif//_FACTORY_H_
