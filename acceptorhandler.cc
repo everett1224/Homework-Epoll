@@ -20,8 +20,8 @@
 #include "handler.h"
 #include "acceptorhandler.h"
 #include "businesshandler.h"
-#include "DI/CppInject.h"
-#include "DI/GlobalObject.h"
+#include "DI/cppinject.h"
+//#include "DI/GlobalObject.h"
 
 AcceptorHandler::AcceptorHandler(EpollEngine* engine):engine_(engine)
 {

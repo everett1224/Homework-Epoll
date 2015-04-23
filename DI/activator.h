@@ -1,13 +1,16 @@
-// Copyright 2009 Michaël Larouche <larouche@kde.org>
+////
+// @file acitvator.h 
+// @brief 
+// the factory of the object 
+// 
+// @author wangbb
+// @email edelweiss1224@gmail.com
 //
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE or copy at
-//  http://www.boost.org/LICENSE_1_0.txt)
+
 #ifndef _CPPINJECT_ACTIVATOR_H_
 #define _CPPINJECT_ACTIVATOR_H_
 
-// TODO: Remove
-#include "Zone.h"
+#include "zone.h"
 
 namespace CppInject
 {
@@ -27,7 +30,7 @@ void default_cleaner(T* t)
 template <class T>
 class activator
 {
-public:
+  public:
 	typedef T* (*factoryFunction)(Zone& f) ;
 	typedef void (*cleanupFunction)(T*) ;
 
@@ -61,11 +64,11 @@ public:
 		return mCleanup;
 	}
 
-private:
+  private:
 	factoryFunction mFactory;
 	cleanupFunction mCleanup;
 };
 	
 }
 
-#endif
+#endif //_CPPINJECT_ACTIVATOR_H_

@@ -1,8 +1,16 @@
+////
+// @file globalobject.h 
+// @brief 
+// the declare of the global objects
+// 
+// @author wangbb
+// @email edelweiss1224@gmail.com
+//
 
 #ifndef _GLOBALOBJECT_H_
 #define _GLOBALOBJECT_H_
 
-#include "Zone.h"
+#include "zone.h"
 
 extern CppInject::Zone globalZone;
 extern CppInject::Zone session1;

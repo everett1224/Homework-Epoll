@@ -1,21 +1,24 @@
-// Copyright 2009 Michaël Larouche <larouche@kde.org>
+////
+// @file destroy.h 
+// @brief 
+// the base class of destroys
+// 
+// @author wangbb
+// @email edelweiss1224@gmail.com
 //
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE or copy at
-//  http://www.boost.org/LICENSE_1_0.txt)
+
 #ifndef _CPPINJECT_DESTROYER_H_
 #define _CPPINJECT_DESTROYER_H_
 
 namespace CppInject
 {
-
 /**
  * @internal
  * @brief Abtract functor to destroy an object in a given scope
  */
 class destroyer
 {
-public:
+  public:
 	destroyer(){};
 	virtual ~destroyer(){};
 	
@@ -24,4 +27,4 @@ public:
 
 }
   
-#endif
+#endif //_CPPINJECT_DESTROYER_H_
