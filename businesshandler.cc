@@ -61,13 +61,8 @@ bool BusinessHandler::handle()
 		}
 
 		// write the buffer to remote output 
-		write(streamer_.myfd, "this is echo:", sizeof("this is echo:"));
+		write(streamer_.myfd, "this is echo:", sizeof("this is echo:")-1);//sizeof() - 1 will delete the string charictor /0 
 		write(streamer_.myfd, buf, count); 
-
-		//pwt->fd = fd;
-		//pwt->modifyFd();
-		//pwt->myevent = EPOLLOUT | EPOLLET;
-		//pmasterEngine->addToTheEngine(pwt, 1);
 
 		int s = printf("the buff is %s\n", buf);
 		if (s == -1){

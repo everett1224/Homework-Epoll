@@ -23,9 +23,6 @@
 namespace CppInject
 {
 
-/**
- *
- */
 template <typename T, int Which=0> 
 class supply
 {

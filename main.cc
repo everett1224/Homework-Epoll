@@ -1,10 +1,10 @@
 #include "DI/cppinject.h"
 #include "acceptorhandler.h"
 #include "engine.h"
+#include "sigfunc.h"
 
-extern void signalINTConfg(void(*func)(int));
 
-bool quit = false; 
+static bool quit = false; 
 
 void got_signal(int no)
 {
@@ -21,9 +21,8 @@ int main()
 	
 	EpollEngine* engine = CppInject::supply<EpollEngine>::fetch();
 	
-	while(1){
+	while(!quit){
 		engine->run();
-		if(quit) break;
 	}
 	
 	return 0;
