@@ -46,8 +46,15 @@ bool BusinessHandler::handle()
 		
 		if (count == -1)
 		{
-			if(EAGAIN != errno){
-				perror ("read");
+			if(EAGAIN != errno)
+			{
+				printf ("errno %d : %s\n", errno, strerror(errno));
+				if(ECONNRESET == errno) // errno 104
+				{
+					printf("CLIENT ECONNRESET\n");
+					done_ = true;
+					break;
+				}
 				exit(0);
 			}		
 			break;
