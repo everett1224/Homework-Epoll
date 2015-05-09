@@ -1,5 +1,4 @@
 #include "client.h"
-#include "tcpClient.h"
 #include <string.h>
 
 #define MAXLINE 512
@@ -33,16 +32,12 @@ int main(int argc, char **argv)
 	{ 
 		if(vfork()==0)//here vfork is better than fork to print to the screen
 		{
-			Client<Tcp> myClient("127.0.0.1", 10240, web_business);
+			Client<TCP> myClient("127.0.0.1", 10240, web_business);
 			myClient.run();
 		}
-		else  // if keyword else is forget this will the run() will only called once
-			  // because of the child and parent both will call exit. ELSE can make the child not call the exit.
-		exit(0);	//!!! this is important see man vfork. if forget it will causer coredump 
-			    	//a.out: cxa_atexit.c:100: __new_exitfn: Assertion `l != ((void *)0)' failed. Aborted (core dumped)
-					//If you have a look at the man page for vfork(), you should see it tells you that you should never return from the function in the child, or call exit() - call either _exit() or one of the exec() functions.
+		else 
+			exit(0);
 	}
-//	exit(0);
 	
 	return 0;
 }	

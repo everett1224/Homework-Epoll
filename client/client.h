@@ -1,12 +1,7 @@
 ////
 // @file client.h
 // @brief
-// the client class  
-// ******************************
-//
-// Client design with CRTP pattern
-//
-// ******************************
+// the client Template class  
 //
 // @auther wangbb
 // @email edelweiss1224@gmail.com
@@ -18,14 +13,22 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <errno.h>
+#include <netinet/in.h>
+#include <sys/types.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
 
 typedef void (*business_)(int);
+
+class TCP;
+class UDP;
 
 template <class T>
 class Client
 {
   private:
-	char *serverIp_;
+	const char *serverIp_; 
 	int connectSocket_;
 	int serverPort_;
 	//the business function
@@ -33,29 +36,74 @@ class Client
 
   public:
 	Client();
-	Client(char* ip, int port, business_ callback);
+	Client(const char* ip, int port, business_ callback);
 	~Client();
 	//connect the server
 	void run();
+	bool createSocket();
+	bool getReady();
 };
 
 template <class T>
 Client<T>::Client() : serverIp_(NULL), connectSocket_(0), serverPort_(0), func_(NULL){}
 
 template <class T>
-Client<T>::Client(char* ip, int port, business_ callback) : serverIp_(ip), connectSocket_(0), serverPort_(port), func_(callback){}
+Client<T>::Client(const char* ip, int port, business_ callback) : serverIp_(ip), connectSocket_(0), serverPort_(port), func_(callback){}
+
+template <>
+bool Client<TCP>::createSocket()
+{
+	connectSocket_ = socket( AF_INET, SOCK_STREAM, 0);
+	if ( connectSocket_ == -1 )
+	{
+		printf("socket error\n");
+		return false;
+	}
+	return true;
+} 
+
+template <>
+bool Client<UDP>::createSocket()
+{
+	connectSocket_ = socket( AF_INET, SOCK_DGRAM, 0);
+	if ( connectSocket_ == -1 )
+	{
+		printf("socket error\n");
+		return false;
+	}
+	return true;
+} 
+
+template <class T>
+bool Client<T>::getReady()
+{
+	struct sockaddr_in ser;
+	ser.sin_family = AF_INET;
+	ser.sin_port = htons(serverPort_);
+	ser.sin_addr.s_addr = inet_addr(serverIp_);
+	if ( connect( connectSocket_,(struct sockaddr*)&ser,sizeof(ser) ) == -1 )
+	{
+		perror("connect error:");
+		return false;
+	}
+
+	return true;
+}
+
 
 template <class T>
 void Client<T>::run()
 {
-	//get the connect socket
-	connectSocket_ = static_cast<T*>(this) -> getReady(serverIp_, serverPort_); 
-	
-	if ( 0 == connectSocket_){
-		printf("connect error\n");
+	if( ! createSocket() ){
+		perror("socket create error");
 		exit(0);
 	}
-	//static_cast<T*>(this) -> startup();
+	
+	if( ! getReady() ){
+		perror("connect error");
+		exit(0);
+	}
+	
 	func_(connectSocket_);
 }
 
